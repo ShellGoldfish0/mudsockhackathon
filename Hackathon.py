@@ -1,4 +1,3 @@
-
 #imports
 import discord
 import json
@@ -12,7 +11,7 @@ import asyncio
 
 #opens a json file with students discord names and hashes as well as the bio they input in registration
 with open('StudentList.json') as StudentBio:
-    dictOne = json.load(StudentBio)
+    bioDict = json.load(StudentBio)
 
 with open('classDict.json') as cl:
     classDict = json.load(cl)
@@ -24,7 +23,7 @@ intrestList = ["valorant","football","basketball","video games","lacrosse","ches
 
 
 #token and prefix setup.
-TOKEN = "TOKEN NORMALLY GOES HERE"
+TOKEN = "haha funny"
 bot = commands.Bot(command_prefix="=")
 intrestCounter = {}
 def get_key(val):
@@ -43,7 +42,7 @@ async def setup1(ctx, name):
     if name == "Teacher":     #checks to make sure the input would make the roles uniform
         guild = ctx.guild
         await guild.create_role(name = name)
-        await ctx.send(f'Role has been created', embed = True)
+        await ctx.send(f'Role has been created')
     else:
         await ctx.send("Make sure your message includes Teacher as the only argument.")
 #2nd part of setup. Creates the student role, which will aslo be used during certain commands.
@@ -68,8 +67,8 @@ async def register(ctx):
         discordFullTag = "@" + ctx.author.name + "#" + ctx.author.discriminator
         bio = msg.content
         with open("StudentList.json", "w") as Save:
-            dictOne[discordFullTag] = bio
-            json.dump(dictOne, Save)
+            bioDict[discordFullTag] = bio
+            json.dump(bioDict, Save)
             await ctx.channel.send("You have now been added to our database!")
         await ctx.send("Make sure to use =profile to check out your profile!")
     except asyncio.TimeoutError:
@@ -80,7 +79,7 @@ async def profile(ctx):
     def check(m: discord.Message):  # m = discord.Message.
         return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
     findUser = "@"+ str(ctx.author)
-    userFound = findUser in dictOne
+    userFound = findUser in bioDict
     if userFound == True:
         complimentList = ["The smartest", "My Precious", "The Prettiest", "My Favorite", "The Best student", "The Winner", "Clearly The Favorite Student", "The Athlete", "The State Champ", "Sapp's Favorite"]
         compliment  = random.choice(complimentList)
@@ -89,7 +88,7 @@ async def profile(ctx):
             msg = await bot.wait_for("message", check=check, timeout=60)
             nameHeader = msg.content
             embed = discord.Embed(title = nameHeader, description = compliment, color = 0x0220CC)
-            embed.add_field(name = "Bio", value = dictOne[findUser], inline=False)
+            embed.add_field(name = "Bio", value = bioDict[findUser], inline=False)
             await ctx.send(embed = embed)
         except asyncio.TimeoutError:
             await ctx.send("Sorry, you didn't reply in time!")
@@ -128,8 +127,6 @@ async def joinclass(ctx):
 async def viewclass(ctx):
     with open('classDict.json', "r") as clist:
         namesList = json.load(clist)
-    with open('StudentList.json') as StudentBios:
-        bioDict = json.load(StudentBios)
     embed = discord.Embed(title = "List of students", description = "", color = 0x0220CC)
     for name in namesList:
         keyThing = namesList[name]
@@ -242,8 +239,6 @@ async def analyze(ctx):
 #allows people to input their intrests if they do not appear in analyze. best when used with viewclass.
 @bot.command(help="allows input of more intrests for scanning.", brief="Puts the information into the search database")
 async def interests(ctx, arg):
-    with open('links.json') as linkList:
-        linkThingy = json.load(linkList)
     def check(m: discord.Message):  # m = discord.Message.
         return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
     intrestList.append(arg)
