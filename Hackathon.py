@@ -24,7 +24,7 @@ intrestList = ["valorant","football","basketball","video games","lacrosse","ches
 
 
 #token and prefix setup.
-TOKEN = "OTMzMDI0NjY5OTMyNjE3NzQ5.Yebg8A.TgKqkSOuXtW2wS-DKBWRkRmdP0Q"
+TOKEN = "TOKEN NORMALLY GOES HERE"
 bot = commands.Bot(command_prefix="=")
 intrestCounter = {}
 def get_key(val):
